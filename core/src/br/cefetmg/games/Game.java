@@ -20,10 +20,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * 
  * @author fegemo
  */
+
+
+
 public class Game extends ApplicationAdapter {
 
     private SpriteBatch batch;
     private Texture[] mapLevelsTextures;
+    private Texture goomba;
+    private float fieldWidth;
+    private float fieldHeight;
+    private float cWidth;
+    private float cHeight;
+    private Goomba gumbus;
+ 
+    private boolean left,right,up,down;
+   
     
     /**
      * No método create colocamos código de inicialização do jogo. Por exemplo,
@@ -35,12 +47,22 @@ public class Game extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         mapLevelsTextures = new Texture[2];
+        goomba = new Texture("goomba.png");
         mapLevelsTextures[0] = new Texture("map-level-1.png");
         mapLevelsTextures[1] = new Texture("map-level-2.png");
+        
+        gumbus = new Goomba(goomba,mapLevelsTextures[0]);
+        
+        fieldWidth=mapLevelsTextures[0].getWidth();
+        fieldHeight=mapLevelsTextures[0].getHeight();
+        cWidth=goomba.getWidth();
+        cHeight=goomba.getHeight();
         
         // cor de fundo da tela: branco
         Gdx.gl.glClearColor(1, 1, 1, 1);        
     }
+    
+   
 
     /**
      * No método dispose nós desfazemos dos recursos que estávamos usando. Por
@@ -71,9 +93,10 @@ public class Game extends ApplicationAdapter {
 
         batch.begin();        
             // desenhos são realizados aqui
-            batch.draw(mapLevelsTextures[0], 0, 0);
-            batch.draw(mapLevelsTextures[1], 0, 0);
             
+            batch.draw(mapLevelsTextures[0], 0, 0);
+            gumbus.render(batch);
+            batch.draw(mapLevelsTextures[1], 0, 0);
 
         batch.end();
     }
@@ -92,8 +115,8 @@ public class Game extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-
-        // ...
+        gumbus.update();
+        
     }
     
 }
