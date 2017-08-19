@@ -5,7 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * A classe principal de uma aplicação LibGDX deve herdar de ApplicationAdapter,
@@ -27,14 +30,9 @@ public class Game extends ApplicationAdapter {
 
     private SpriteBatch batch;
     private Texture[] mapLevelsTextures;
-    private Texture goomba;
-    private float fieldWidth;
-    private float fieldHeight;
-    private float cWidth;
-    private float cHeight;
     private Goomba gumbus;
  
-    private boolean left,right,up,down;
+    private Texture goomba;
    
     
     /**
@@ -47,23 +45,13 @@ public class Game extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         mapLevelsTextures = new Texture[2];
-        goomba = new Texture("goomba.png");
+        goomba = new Texture("goomba-spritesheet.png");
         mapLevelsTextures[0] = new Texture("map-level-1.png");
         mapLevelsTextures[1] = new Texture("map-level-2.png");
-        
         gumbus = new Goomba(goomba,mapLevelsTextures[0]);
-        
-        fieldWidth=mapLevelsTextures[0].getWidth();
-        fieldHeight=mapLevelsTextures[0].getHeight();
-        cWidth=goomba.getWidth();
-        cHeight=goomba.getHeight();
-        
         // cor de fundo da tela: branco
         Gdx.gl.glClearColor(1, 1, 1, 1);        
     }
-    
-   
-
     /**
      * No método dispose nós desfazemos dos recursos que estávamos usando. Por
      * exemplo, texturas, sons e outras coisas. É interessante implementar
@@ -84,38 +72,23 @@ public class Game extends ApplicationAdapter {
     public void render() {
         // apaga a tela, para desenharmos de novo
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
         // chamando o método update(), que atualiza a lógica do jogo.
         // passa para o método quanto tempo se passou desde a última vez
         // que renderizamos
         update(Gdx.graphics.getDeltaTime());
-        
-
         batch.begin();        
             // desenhos são realizados aqui
-            
             batch.draw(mapLevelsTextures[0], 0, 0);
             gumbus.render(batch);
             batch.draw(mapLevelsTextures[1], 0, 0);
-
         batch.end();
     }
 
-    /**
-     * Na LibGDX, não existe um método update() que seja separado do render(),
-     * portanto, é uma boa prática criar um update() e chamá-lo de dentro do
-     * render.
-     *
-     * A ideia é colocar aqui tudo relacionado à atualização da lógica do jogo
-     * e, no render, apenas comandos referentes ao desenho da cena.
-     *
-     * @param delta o tempo que passou desde o último "quadro".
-     */
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             Gdx.app.exit();
         }
-        gumbus.update();
+        gumbus.update(delta);
         
     }
     
